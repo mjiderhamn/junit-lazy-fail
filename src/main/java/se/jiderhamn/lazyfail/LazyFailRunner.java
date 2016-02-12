@@ -6,6 +6,7 @@ import java.util.List;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
+import org.junit.runners.model.MultipleFailureException;
 import org.junit.runners.model.Statement;
 
 /**
@@ -15,7 +16,7 @@ import org.junit.runners.model.Statement;
 public class LazyFailRunner extends BlockJUnit4ClassRunner {
   
   // TODO Consider implications of ThreadLocal + initialValue
-  private static ThreadLocal<List<AssertionError>> assertErrors = new ThreadLocal<>();
+  private static ThreadLocal<List<Throwable>> assertErrors = new ThreadLocal<>();
 
   public LazyFailRunner(Class<?> klass) throws InitializationError {
     super(klass);
@@ -40,16 +41,13 @@ public class LazyFailRunner extends BlockJUnit4ClassRunner {
     @Override
     public void evaluate() throws Throwable {
       try {
-        assertErrors.set(new ArrayList<>()); // Indicate we are ready to have errors enlisted
+        final ArrayList<Throwable> errorsWhileInvoking = new ArrayList<>();
+        
+        assertErrors.set(errorsWhileInvoking); // Indicate we are ready to have errors enlisted
         
         method.invokeExplosively(target);
-        final List<AssertionError> invocationAssertionErrors = assertErrors.get();
-        if(invocationAssertionErrors != null && ! invocationAssertionErrors.isEmpty()) {
-          if(invocationAssertionErrors.size() == 1)
-            throw invocationAssertionErrors.get(0);
-          else
-            throw new MultipleAssertionsFailedError(invocationAssertionErrors); 
-        }
+
+        MultipleFailureException.assertEmpty(errorsWhileInvoking); 
       }
       finally {
         assertErrors.remove();
