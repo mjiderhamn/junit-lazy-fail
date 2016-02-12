@@ -9,6 +9,8 @@ import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.MultipleFailureException;
 import org.junit.runners.model.Statement;
 
+import static org.junit.Assert.fail;
+
 /**
  * TODO Document
  * @author Mattias Jiderhamn
@@ -17,6 +19,9 @@ public class LazyFailRunner extends BlockJUnit4ClassRunner {
   
   // TODO Consider implications of ThreadLocal + initialValue
   private static ThreadLocal<List<Throwable>> assertErrors = new ThreadLocal<>();
+  
+  /** When this {@link ThreadLocal} has a value (of {@code true}), the thread is in fail fast mode */
+  private static ThreadLocal<Boolean> failFastMode = new ThreadLocal<>();
 
   public LazyFailRunner(Class<?> klass) throws InitializationError {
     super(klass);
@@ -61,7 +66,28 @@ public class LazyFailRunner extends BlockJUnit4ClassRunner {
   }
 
   /** TODO */
-  public static void addAssertionError(AssertionError error) {
+  public static void addAssertionError(AssertionError error) throws Exception {
     assertErrors.get().add(error);
+    if(failFastMode.get() == Boolean.TRUE)
+      MultipleFailureException.assertEmpty(assertErrors.get());
+  }
+  
+  /** 
+   * Perform job in {@code callback}, and if there are {@link AssertionError}s we will fail immediately, altough with 
+   * all the errors collected so far. 
+   */
+  static void failFast(Runnable callback) {
+    try {
+      failFastMode.set(Boolean.TRUE);
+      callback.run();
+    }
+    finally {
+      failFastMode.remove();
+    }
+  }
+  
+  /** TODO */
+  public static void failNow(String message) {
+    failFast(() -> fail(message));
   }
 }
