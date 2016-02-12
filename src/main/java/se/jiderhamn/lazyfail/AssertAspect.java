@@ -1,6 +1,7 @@
 package se.jiderhamn.lazyfail;
 
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -18,7 +19,7 @@ public class AssertAspect {
   @Pointcut("call(* junit.framework.Assert.*(..))")
   public void junitFrameworkAssert() {}
   
-  @Around("(orgJunitAssert() || junitFrameworkAssert())") // TODO @AfterThrows
+  @Around("(orgJunitAssert() || junitFrameworkAssert())")
   public void assertMethod(ProceedingJoinPoint jp) throws Throwable {
     try {
       jp.proceed();
