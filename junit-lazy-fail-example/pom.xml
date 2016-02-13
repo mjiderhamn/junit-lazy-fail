@@ -41,7 +41,6 @@
 
   <build>
     <plugins>
-      <!-- Generate the JPA metamodel -->
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
@@ -69,12 +68,10 @@
           <target>1.8</target>
         </configuration>
         <executions>
-          <!-- Weave both main and test classes -->
+          <!-- Weave test classes -->
           <execution>
             <id>test-compile</id>
             <configuration>
-              <!-- Needed for successful EMMA execution -->
-              <Xlint>ignore</Xlint>
               <skip>${maven.test.skip}</skip>
             </configuration>
             <goals>

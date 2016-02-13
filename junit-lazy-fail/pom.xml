@@ -39,7 +39,6 @@
 
   <build>
     <plugins>
-      <!-- Generate the JPA metamodel -->
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
@@ -71,8 +70,6 @@
           <execution>
             <id>test-compile</id>
             <configuration>
-              <!-- Needed for successful EMMA execution -->
-              <Xlint>ignore</Xlint>
               <skip>${maven.test.skip}</skip>
             </configuration>
             <goals>
