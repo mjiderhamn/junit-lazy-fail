@@ -6,8 +6,6 @@
   <packaging>jar</packaging>
   <name>TODO</name>
   <properties>
-    <slf4j.version>1.7.2</slf4j.version>
-    <logback.version>1.1.3</logback.version>    
     <aspectj.version>1.8.7</aspectj.version>
   </properties>
   <!-- TODO
@@ -23,14 +21,15 @@
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjrt</artifactId>
       <version>${aspectj.version}</version>
-      <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjweaver</artifactId>
       <version>${aspectj.version}</version>
       <scope>test</scope>
     </dependency>
+    
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
