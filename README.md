@@ -1,4 +1,4 @@
-# Lazy fail JUnit addon
+# Lazy fail JUnit add-on
 
 This is an experiment to alter the default JUnit behaviour to mimic the behaviour of the [Go testing framework](https://golang.org/pkg/testing/),
 i.e. failed asserts will normally not end the execution of the test case, but instead all failed asserts are reported
