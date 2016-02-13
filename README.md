@@ -2,8 +2,9 @@
 
 This is an experiment to alter the default JUnit behaviour to mimic the behaviour of the [Go testing framework](https://golang.org/pkg/testing/),
 i.e. failed asserts will normally not end the execution of the test case, but instead all failed asserts are reported
-at the end. The project is inspired by [Dan North](http://dannorth.net/)s [jgotesting](https://gitlab.com/tastapod/jgotesting) that however
-also uses the Go syntax.
+at the end. The project is inspired by (as well as have inspired) [Dan North](http://dannorth.net/)s 
+[jgotesting](https://gitlab.com/tastapod/jgotesting) that however supports the Go syntax and does not require 
+[AspectJ](http://eclipse.org/aspectj).
 
 ## Examples
 
@@ -16,7 +17,7 @@ In order to use this addon, you must first add a dependency to your Maven `pom.x
     <dependency>
       <groupId>se.jiderhamn</groupId>
       <artifactId>junit-lazy-fail</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>0.9.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 ```

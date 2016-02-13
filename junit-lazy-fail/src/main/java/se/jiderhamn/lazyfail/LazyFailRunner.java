@@ -96,12 +96,17 @@ public class LazyFailRunner extends BlockJUnit4ClassRunner {
    * all the errors collected so far. 
    */
   public static void failFast(Runnable callback) {
-    try {
-      failFastMode.set(Boolean.TRUE);
+    if(failFastMode.get() == Boolean.TRUE) { // We are already in fail fast mode  
       callback.run();
     }
-    finally {
-      failFastMode.remove();
+    else {
+      try {
+        failFastMode.set(Boolean.TRUE);
+        callback.run();
+      }
+      finally {
+        failFastMode.remove();
+      }
     }
   }
   
@@ -111,8 +116,7 @@ public class LazyFailRunner extends BlockJUnit4ClassRunner {
       }
   
   /** Non-lazy equivalent of {@link Assert#assertThat(String, Object, Matcher)} */
-  public static <T> void assertNowThat(String reason, T actual,
-          Matcher<? super T> matcher) {
+  public static <T> void assertNowThat(String reason, T actual, Matcher<? super T> matcher) {
     failFast(() -> assertThat(reason, actual, matcher));
   }
   
