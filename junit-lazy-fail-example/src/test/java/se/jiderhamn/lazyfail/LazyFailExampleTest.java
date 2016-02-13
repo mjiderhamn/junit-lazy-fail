@@ -36,4 +36,10 @@ public class LazyFailExampleTest {
     });
   }
 
+  @Test
+  public void otherException() {
+    assertTrue("This will be included", false);
+    throw new NullPointerException("Stop!");
+  }
+  
 }

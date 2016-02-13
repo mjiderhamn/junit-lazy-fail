@@ -45,16 +45,18 @@ public class LazyFailRunner extends BlockJUnit4ClassRunner {
 
     @Override
     public void evaluate() throws Throwable {
-      try {
-        final ArrayList<Throwable> errorsWhileInvoking = new ArrayList<>();
-        
-        assertErrors.set(errorsWhileInvoking); // Indicate we are ready to have errors enlisted
-        
-        method.invokeExplosively(target);
+      final ArrayList<Throwable> errorsWhileInvoking = new ArrayList<>();
+      assertErrors.set(errorsWhileInvoking); // Indicate we are ready to have errors enlisted
 
-        MultipleFailureException.assertEmpty(errorsWhileInvoking); 
+      try {
+        method.invokeExplosively(target);
+      }
+      catch (Throwable t) {
+        addAssertionError(t);
       }
       finally {
+        MultipleFailureException.assertEmpty(errorsWhileInvoking); 
+
         assertErrors.remove();
       }
     }
@@ -66,10 +68,11 @@ public class LazyFailRunner extends BlockJUnit4ClassRunner {
   }
 
   /** TODO */
-  public static void addAssertionError(AssertionError error) throws Exception {
-    assertErrors.get().add(error);
+  public static void addAssertionError(Throwable throwable) throws Exception {
+    final List<Throwable> errors = assertErrors.get();
+    errors.add(throwable);
     if(failFastMode.get() == Boolean.TRUE)
-      MultipleFailureException.assertEmpty(assertErrors.get());
+      MultipleFailureException.assertEmpty(errors);
   }
   
   /** 
